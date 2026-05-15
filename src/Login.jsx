@@ -16,8 +16,10 @@ function Login({ setAuth }) {
     setSuccess('');
     
     try {
-      // Choose the endpoint based on whether we are logging in or signing up
-      const endpoint = isLogin ? 'http://localhost:5000/api/login' : 'http://localhost:5000/api/signup';
+      // Update these URLs to point to your new live Render backend!
+      // Make sure to replace YOUR-RENDER-URL.onrender.com with your actual Render web address
+      const baseUrl = 'https://YOUR-RENDER-URL.onrender.com';
+      const endpoint = isLogin ? `${baseUrl}/api/login` : `${baseUrl}/api/signup`;
 
       // Send credentials securely to the Python backend
       const response = await fetch(endpoint, {

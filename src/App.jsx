@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import './App.css'
 import Home from './Home'
 import Software from './Software'
@@ -44,6 +44,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
           <Route path="/software" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Software /></ProtectedRoute>} />
+          {/* Catch-all route: Automatically redirects any unknown URL to the Home page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       

@@ -18,7 +18,7 @@ function Login({ setAuth }) {
     try {
       // Update these URLs to point to your new live Render backend!
       // Make sure to replace YOUR-RENDER-URL.onrender.com with your actual Render web address
-      const baseUrl = 'https://YOUR-RENDER-URL.onrender.com';
+      const baseUrl = 'https://my-awesome-app-1.onrender.com';
       const endpoint = isLogin ? `${baseUrl}/api/login` : `${baseUrl}/api/signup`;
 
       // Send credentials securely to the Python backend

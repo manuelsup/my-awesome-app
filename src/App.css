@@ -187,10 +187,11 @@ html {
 /* Grid layout for the download links */
 .downloads-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(var(--dynamic-cols, 3), minmax(0, 1fr));
+  gap: var(--dynamic-gap, 1.5rem);
   width: 100%;
-  max-width: 1000px;
+  max-width: var(--dynamic-max, 960px);
+  margin: 0 auto;
 }
 
 /* The Download Card */
@@ -293,6 +294,15 @@ a {
   
   .gradient-text {
     font-size: 2.8rem !important;
+  }
+
+  .downloads-list {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  .grid-slider-container {
+    display: none !important;
   }
 }
 

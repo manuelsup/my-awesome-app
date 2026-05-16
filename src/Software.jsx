@@ -7,6 +7,7 @@ function Software() {
   const [downloads, setDownloads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [columns, setColumns] = useState(3);
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -44,24 +45,39 @@ function Software() {
   );
 
   return (
-    <section className="container animate-fade-in" style={{ position: 'relative' }}>
+    <section className="container animate-fade-in" style={{ position: 'relative', maxWidth: '100%' }}>
       <div className="animate-slide-up" style={{ textAlign: 'center', marginBottom: '40px', animationDelay: '0.1s' }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Downloads</h1>
         <p>Select a file below to start downloading.</p>
       </div>
 
-      <div className="animate-slide-up" style={{ position: 'relative', width: '100%', maxWidth: '450px', margin: '0 auto 40px', animationDelay: '0.2s' }}>
-        <svg style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', zIndex: 1 }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input
-          type="text"
-          placeholder="Search for software..."
-          className="search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="animate-slide-up" style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: '0 auto 40px', animationDelay: '0.2s', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div style={{ position: 'relative' }}>
+          <svg style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', zIndex: 1 }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            placeholder="Search for software..."
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ maxWidth: '100%' }}
+          />
+        </div>
+        
+        <div className="grid-slider-container" style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'var(--glass-bg)', padding: '10px 20px', borderRadius: '15px', border: '1px solid var(--border)' }}>
+          <label style={{ fontSize: '0.9rem', color: 'var(--text-h)', whiteSpace: 'nowrap' }}>Grid Columns: <strong>{columns}</strong></label>
+          <input 
+            type="range" 
+            min="3" 
+            max="10" 
+            value={columns} 
+            onChange={(e) => setColumns(Number(e.target.value))}
+            style={{ width: '100%', accentColor: 'var(--accent)' }}
+          />
+        </div>
       </div>
 
       {/* Background Overlay for expanded card */}
@@ -72,7 +88,11 @@ function Software() {
         />
       )}
 
-      <div className="downloads-list">
+      <div className="downloads-list" style={{ 
+        '--dynamic-cols': columns,
+        '--dynamic-max': `${columns * 320}px`,
+        '--dynamic-gap': columns > 6 ? '0.75rem' : '1.5rem'
+      }}>
         {filteredDownloads.length > 0 ? (
           filteredDownloads.map((file, index) => (
             <div 
@@ -91,19 +111,38 @@ function Software() {
                   cursor: 'pointer',
                   transform: expandedId === file.id ? 'scale(1.1) translateY(-10px)' : '',
                   boxShadow: expandedId === file.id ? 'var(--shadow-glow)' : '',
+                  padding: columns > 6 ? '1rem' : columns > 4 ? '1.5rem' : '2rem',
+                  minWidth: 0,
+                  overflow: 'hidden'
                 }}
               >
                 <img 
                   src={file.icon} 
                   alt={`${file.name} logo`} 
-                  style={{ width: '64px', height: '64px', padding: '10px', backgroundColor: 'var(--bg)', borderRadius: '16px', objectFit: 'contain', marginBottom: '16px' }} 
+                  style={{ 
+                    width: columns > 6 ? '40px' : '64px', 
+                    height: columns > 6 ? '40px' : '64px', 
+                    padding: '10px', 
+                    backgroundColor: 'var(--bg)', 
+                    borderRadius: '16px', 
+                    objectFit: 'contain', 
+                    marginBottom: columns > 6 ? '8px' : '16px',
+                    margin: '0 auto'
+                  }} 
                   onError={(e) => { e.target.src = 'https://www.google.com/s2/favicons?domain=example.com&sz=128'; }}
                 />
-                <h2>{file.name}</h2>
+                <h2 style={{ 
+                  fontSize: columns > 6 ? '1rem' : columns > 4 ? '1.2rem' : '1.5rem',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>{file.name}</h2>
                 
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 12px', borderRadius: '999px' }}>{file.version}</span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 12px', borderRadius: '999px' }}>{file.size}</span>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: columns > 6 ? '8px' : '12px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.7rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>{file.version}</span>
+                  {columns <= 6 && (
+                    <span style={{ fontSize: '0.7rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>{file.size}</span>
+                  )}
                 </div>
 
                 <div style={{ 
@@ -115,14 +154,21 @@ function Software() {
                   marginBottom: expandedId === file.id ? '15px' : '0px',
                   color: 'var(--text)', 
                   fontSize: '0.9rem',
-                  lineHeight: '1.5'
+                  lineHeight: '1.5',
+                  whiteSpace: 'normal'
                 }}>
                   <p style={{ margin: 0 }}>{file.description}</p>
                 </div>
                 <a href={file.link} download target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ width: '100%', textDecoration: 'none' }}>
-                  <button className="download-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    Download
+                  <button className="download-btn" style={{ 
+                    padding: columns > 6 ? '8px 12px' : '12px 24px',
+                    fontSize: columns > 6 ? '0.85rem' : '1.05rem',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {columns <= 6 && (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    )}
+                    {columns > 6 ? 'Get' : 'Download'}
                   </button>
                 </a>
               </div>

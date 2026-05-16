@@ -11,7 +11,7 @@ function Login({ setAuth }) {
   const navigate = useNavigate();
 
   const handleGuestLogin = () => {
-    setAuth(true);
+    setAuth('guest');
     navigate('/software');
   };
 
@@ -37,7 +37,7 @@ function Login({ setAuth }) {
 
       if (response.ok && data.success) {
         if (isLogin) {
-          setAuth(true);
+          setAuth(username.toLowerCase());
           navigate('/software'); // Redirect to software page upon successful login
         } else {
           // On successful signup, switch back to login mode so they can sign in

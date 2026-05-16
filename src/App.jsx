@@ -16,11 +16,13 @@ function ProtectedRoute({ isAuthenticated, children }) {
 }
 
 function App() {
-  // State to track if the user is logged in
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // State to track if the user is logged in (stores username or 'guest')
+  const [user, setUser] = useState(null);
+  const isAuthenticated = !!user;
+  const isAdmin = user === 'admin@test.com';
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
+    setUser(null);
   };
 
   return (
@@ -34,7 +36,7 @@ function App() {
           {isAuthenticated && (
             <>
               <NavLink to="/software">Software</NavLink>
-              <NavLink to="/admin">Admin</NavLink>
+              {isAdmin && <NavLink to="/admin">Admin</NavLink>}
             </>
           )}
           
@@ -49,9 +51,9 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
+          <Route path="/login" element={<Login setAuth={setUser} />} />
           <Route path="/software" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Software /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Admin /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute isAuthenticated={isAdmin}><Admin /></ProtectedRoute>} />
           {/* Catch-all route: Automatically redirects any unknown URL to the Home page */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

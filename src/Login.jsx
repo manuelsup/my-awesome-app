@@ -49,17 +49,23 @@ function Login({ setAuth }) {
   };
 
   return (
-    <section className="container">
-      <div className="hero-content login-card">
+    <section className="container animate-fade-in">
+      <div className="login-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
         <h1 style={{ marginBottom: '0.5rem', lineHeight: '1.2' }}>{isLogin ? 'Secure Login' : 'Create an Account'}</h1>
-        <p style={{ marginBottom: '1.5rem', lineHeight: '1.5' }}>
+        <p style={{ marginBottom: '1.5rem', lineHeight: '1.5', color: 'var(--text)' }}>
           {isLogin 
             ? 'Please enter your credentials to access IT resources.' 
             : 'Sign up to get access to internal tools and resources.'}
         </p>
         
-        {error && <div className="error-message" style={{ color: '#ef4444', marginBottom: '1rem', fontWeight: 'bold' }}>{error}</div>}
-        {success && <div className="success-message" style={{ color: '#22c55e', marginBottom: '1rem', fontWeight: 'bold' }}>{success}</div>}
+        {error && <div className="error-message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          {error}
+        </div>}
+        {success && <div className="success-message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          {success}
+        </div>}
         
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
@@ -77,7 +83,7 @@ function Login({ setAuth }) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: '0.85rem', cursor: 'pointer', padding: 0, fontWeight: 'bold' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent)', fontSize: '0.85rem', cursor: 'pointer', padding: 0, fontWeight: 'bold' }}
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -94,7 +100,9 @@ function Login({ setAuth }) {
           </button>
           
           <p 
-            style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748b', cursor: 'pointer' }}
+            style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text)', cursor: 'pointer', textAlign: 'center', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.target.style.color = 'var(--accent)'}
+            onMouseOut={(e) => e.target.style.color = 'var(--text)'}
             onClick={() => {
               setIsLogin(!isLogin);
               setError('');

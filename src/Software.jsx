@@ -50,14 +50,14 @@ function Software() {
   );
 
   return (
-    <section className="container" style={{ position: 'relative' }}>
-      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px', color: '#1e293b' }}>Downloads</h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem' }}>Select a file below to start downloading.</p>
+    <section className="container animate-fade-in" style={{ position: 'relative' }}>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }} className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Downloads</h1>
+        <p>Select a file below to start downloading.</p>
       </div>
 
-      <div style={{ position: 'relative', maxWidth: '450px', margin: '0 auto 40px' }}>
-        <svg style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <div className="animate-slide-up" style={{ position: 'relative', width: '100%', maxWidth: '450px', margin: '0 auto 40px', animationDelay: '0.2s' }}>
+        <svg style={{ position: 'absolute', left: '18px', top: '22px', transform: 'translateY(-50%)', color: '#94a3b8', zIndex: 1 }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
@@ -67,54 +67,44 @@ function Software() {
           className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '100%', maxWidth: '100%', margin: 0, boxSizing: 'border-box', padding: '14px 20px 14px 48px', borderRadius: '30px', border: '1px solid #e2e8f0', outline: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', fontSize: '16px', transition: 'box-shadow 0.3s' }}
         />
       </div>
 
       {/* Background Overlay for expanded card */}
       {expandedId && (
         <div 
-          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(4px)', zIndex: 5, transition: 'opacity 0.3s' }}
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(8px)', zIndex: 50, transition: 'opacity 0.3s' }}
           onClick={() => setExpandedId(null)}
         />
       )}
 
       <div className="downloads-list">
         {filteredDownloads.length > 0 ? (
-          filteredDownloads.map((file) => (
+          filteredDownloads.map((file, index) => (
             <div 
               key={file.id} 
-              className="card" 
+              className="card animate-slide-up" 
               onClick={() => toggleExpand(file.id)}
               style={{ 
                 cursor: 'pointer',
-                transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)', // Bouncy spring effect
-                transform: expandedId === file.id ? 'scale(1.35)' : 'scale(1)',
-                boxShadow: expandedId === file.id ? '0 25px 50px -12px rgba(0,0,0,0.5)' : '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)',
-                zIndex: expandedId === file.id ? 10 : 1,
-                position: 'relative',
-                alignSelf: 'flex-start',
-                backgroundColor: '#ffffff',
-                borderRadius: '16px',
-                padding: '24px',
-                border: '1px solid #f1f5f9',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center'
+                transform: expandedId === file.id ? 'scale(1.1) translateY(-10px)' : '',
+                boxShadow: expandedId === file.id ? 'var(--shadow-glow)' : '',
+                zIndex: expandedId === file.id ? 100 : 1,
+                position: expandedId === file.id ? 'relative' : 'static',
+                animationDelay: `${0.2 + (index * 0.05)}s`
               }}
             >
               <img 
                 src={file.icon} 
                 alt={`${file.name} logo`} 
-                style={{ width: '64px', height: '64px', padding: '10px', backgroundColor: '#f8fafc', borderRadius: '16px', objectFit: 'contain', marginBottom: '16px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }} 
+                style={{ width: '64px', height: '64px', padding: '10px', backgroundColor: 'var(--bg)', borderRadius: '16px', objectFit: 'contain', marginBottom: '16px' }} 
                 onError={(e) => { e.target.src = 'https://www.google.com/s2/favicons?domain=example.com&sz=128'; }}
               />
-              <h2 style={{ fontSize: '1.25rem', color: '#0f172a', margin: '0 0 12px 0' }}>{file.name}</h2>
+              <h2>{file.name}</h2>
               
               <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '12px' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569', backgroundColor: '#f1f5f9', padding: '4px 12px', borderRadius: '999px' }}>{file.version}</span>
-                <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#475569', backgroundColor: '#f1f5f9', padding: '4px 12px', borderRadius: '999px' }}>{file.size}</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 12px', borderRadius: '999px' }}>{file.version}</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 12px', borderRadius: '999px' }}>{file.size}</span>
               </div>
 
               <div style={{ 
@@ -124,16 +114,14 @@ function Software() {
                 transition: 'all 0.3s ease-in-out',
                 marginTop: expandedId === file.id ? '8px' : '0px',
                 marginBottom: expandedId === file.id ? '15px' : '0px',
-                color: '#475569', 
+                color: 'var(--text)', 
                 fontSize: '0.9rem',
                 lineHeight: '1.5'
               }}>
                 <p style={{ margin: 0 }}>{file.description}</p>
               </div>
               <a href={file.link} download target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ width: '100%', textDecoration: 'none' }}>
-                <button className="download-btn" style={{ 
-                  width: '100%', padding: '12px', borderRadius: '10px', border: 'none', backgroundColor: '#2563eb', color: 'white', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'background-color 0.2s'
-                }}>
+                <button className="download-btn">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                   Download
                 </button>

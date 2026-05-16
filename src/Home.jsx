@@ -1,39 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from './utils/supabase';
 
 function Home() {
-  const updates = [
-    { 
-      id: 1, 
-      date: 'Today', 
-      title: 'Routing & Home Page', 
-      description: 'Configured the routing so that the Home page is the default landing page when you first visit the site.' 
-    },
-    { 
-      id: 2, 
-      date: 'Today', 
-      title: 'UI Tweaks & Bug Fixes', 
-      description: 'Fixed the search bar alignment on the software page and resolved the card expansion stacking issue.' 
-    },
-    { 
-      id: 3, 
-      date: 'Today', 
-      title: 'Guest Access Added', 
-      description: 'Added a "Continue as Guest" button to quickly browse without an account.' 
-    },
-    { 
-      id: 4, 
-      date: 'Today', 
-      title: 'Complete UI Overhaul', 
-      description: 'Introduced a new glassmorphism design, Outfit typography, and dynamic hover animations across all pages.' 
-    },
-    { 
-      id: 5, 
-      date: 'Yesterday', 
-      title: 'Software Catalog Launched', 
-      description: 'Launched the searchable software downloads page with an expanding card interface for detailed app descriptions.' 
-    }
-  ];
+  const [updates, setUpdates] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUpdates = async () => {
+      const { data, error } = await supabase.from('updates').select('*').order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        setUpdates(data);
+      } else {
+        // Fallback or empty state
+        setUpdates([
+          { id: 'default', date: 'Today', title: 'Database Setup Required', description: 'Please create the updates table in Supabase and add some entries to see them here!' }
+        ]);
+      }
+      setLoading(false);
+    };
+    fetchUpdates();
+  }, []);
 
   return (
     <section className="container animate-fade-in">

@@ -5,6 +5,8 @@ import Home from './Home'
 import Software from './Software'
 import Login from './Login'
 
+import Admin from './Admin'
+
 // A wrapper component that redirects users to /login if they aren't authenticated
 function ProtectedRoute({ isAuthenticated, children }) {
   if (!isAuthenticated) {
@@ -29,7 +31,12 @@ function App() {
         <div className="navbar-links">
           <NavLink to="/">Home</NavLink>
           {/* Only show secure links if logged in */}
-          {isAuthenticated && <NavLink to="/software">Software</NavLink>}
+          {isAuthenticated && (
+            <>
+              <NavLink to="/software">Software</NavLink>
+              <NavLink to="/admin">Admin</NavLink>
+            </>
+          )}
           
           {isAuthenticated ? (
             <a href="#logout" onClick={(e) => { e.preventDefault(); handleLogout(); }}>Logout</a>
@@ -44,6 +51,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setAuth={setIsAuthenticated} />} />
           <Route path="/software" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Software /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Admin /></ProtectedRoute>} />
           {/* Catch-all route: Automatically redirects any unknown URL to the Home page */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

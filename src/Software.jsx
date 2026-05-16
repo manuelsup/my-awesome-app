@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './utils/supabase';
 
 function Software() {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+  const [downloads, setDownloads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -10,39 +14,29 @@ function Software() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // If the click is not inside an element with the class 'card', close the expanded card
       if (!event.target.closest('.card')) {
         setExpandedId(null);
       }
     };
-
     document.addEventListener('click', handleClickOutside);
     return () => {
-      // Cleanup the event listener when the component unmounts
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
-  const downloads = [
-    { id: 1, name: "Google Chrome", version: "Latest", size: "1.5 MB", link: "https://www.google.com/chrome/", icon: "https://www.google.com/s2/favicons?domain=google.com&sz=128", description: "A fast, secure, and free web browser built for the modern web." },
-    { id: 2, name: "Microsoft Office", version: "365", size: "Varies", link: "https://www.office.com/", icon: "https://www.google.com/s2/favicons?domain=office.com&sz=128", description: "Productivity software suite including Word, Excel, PowerPoint, and more." },
-    { id: 3, name: "Everest System Download ", version: "v2.0", size: "120 MB", link: "https://portal.everestsystem.org/signintool/", icon: "https://www.google.com/s2/favicons?domain=everestsystem.org&sz=128", description: "Internal IT portal and system management tool." },
-    { id: 4, name: "Mozilla Firefox", version: "Latest", size: "Varies", link: "https://www.mozilla.org/firefox/new/", icon: "https://www.google.com/s2/favicons?domain=mozilla.org&sz=128", description: "A free and open-source web browser developed by the Mozilla Foundation." },
-    { id: 5, name: "Visual Studio Code", version: "Latest", size: "88.5 MB", link: "https://code.visualstudio.com/", icon: "https://www.google.com/s2/favicons?domain=visualstudio.com&sz=128", description: "A powerful, lightweight code editor for developers." },
-    { id: 6, name: "VLC Media Player", version: "Latest", size: "40 MB", link: "https://www.videolan.org/vlc/", icon: "https://www.google.com/s2/favicons?domain=videolan.org&sz=128", description: "A free and open-source cross-platform multimedia player." },
-    { id: 7, name: "7-Zip", version: "Latest", size: "1.5 MB", link: "https://www.7-zip.org/", icon: "https://www.google.com/s2/favicons?domain=7-zip.org&sz=128", description: "A free file archiver with a high compression ratio." },
-    { id: 8, name: "Spotify", version: "Latest", size: "Varies", link: "https://www.spotify.com/download/", icon: "https://www.google.com/s2/favicons?domain=spotify.com&sz=128", description: "Digital music, podcast, and video service." },
-    { id: 9, name: "Slack", version: "Latest", size: "Varies", link: "https://slack.com/downloads/", icon: "https://www.google.com/s2/favicons?domain=slack.com&sz=128", description: "Messaging app for business that connects people to the information they need." },
-    { id: 10, name: "Zoom", version: "Latest", size: "Varies", link: "https://zoom.us/download", icon: "https://www.google.com/s2/favicons?domain=zoom.us&sz=128", description: "Video conferencing, web conferencing, webinars, and screen sharing." },
-    { id: 11, name: "Discord", version: "Latest", size: "Varies", link: "https://discord.com/download", icon: "https://www.google.com/s2/favicons?domain=discord.com&sz=128", description: "Voice, video and text chat app." },
-    { id: 12, name: "Bluebook (AP/SAT Testing App)", version: "Latest", size: "Varies", link: "https://bluebook.collegeboard.org/", icon: "https://www.google.com/s2/favicons?domain=collegeboard.org&sz=128", description: "College Board's digital testing application for AP and SAT exams." },
-    { id: 13, name: "NWEA Secure Testing Browser", version: "Latest", size: "Varies", link: "https://nwea.force.com/nweaconnection/s/article/Secure-Testing-Browser-Download", icon: "https://www.google.com/s2/favicons?domain=nwea.org&sz=128", description: "Secure browser for MAP Growth assessments." },
-    { id: 14, name: "DRC INSIGHT Secure App", version: "Latest", size: "Varies", link: "https://www.drcedirect.com/", icon: "https://www.google.com/s2/favicons?domain=drcedirect.com&sz=128", description: "Secure testing engine for online assessments." },
-    { id: 15, name: "TestNav (Pearson)", version: "Latest", size: "Varies", link: "https://download.testnav.com/", icon: "https://www.google.com/s2/favicons?domain=pearson.com&sz=128", description: "Test delivery system used by Pearson for online assessments." },
-    { id: 17, name: "i-Ready Connect", version: "Web App", size: "N/A", link: "https://i-readyconnect.com/", icon: "https://www.google.com/s2/favicons?domain=i-ready.com&sz=128", description: "Online assessment and instruction portal." },
-    { id: 18, name: "WinRAR", version: "Latest", size: "3.4 MB", link: "https://www.win-rar.com/download.html", icon: "https://www.google.com/s2/favicons?domain=win-rar.com&sz=128", description: "A powerful archive manager and data compression utility." },
-    { id: 19, name: "Audacity", version: "Latest", size: "Varies", link: "https://www.audacityteam.org/download/", icon: "https://www.google.com/s2/favicons?domain=audacityteam.org&sz=128", description: "Free, open source, cross-platform audio software for multi-track recording and editing." },
-  ];
+  useEffect(() => {
+    const fetchSoftware = async () => {
+      const { data, error } = await supabase.from('software').select('*').order('name', { ascending: true });
+      if (error) {
+        console.error("Error fetching software", error);
+        setError("Could not load software. Please make sure the 'software' table exists in Supabase.");
+      } else if (data) {
+        setDownloads(data);
+      }
+      setLoading(false);
+    };
+    fetchSoftware();
+  }, []);
 
   // Filter downloads based on search term
   const filteredDownloads = downloads.filter((file) =>

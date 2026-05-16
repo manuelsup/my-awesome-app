@@ -91,7 +91,8 @@ function Software() {
       <div className="downloads-list" style={{ 
         '--dynamic-cols': columns,
         '--dynamic-max': `${columns * 320}px`,
-        '--dynamic-gap': columns > 6 ? '0.75rem' : '1.5rem'
+        '--dynamic-gap': columns > 6 ? '0.75rem' : '1.5rem',
+        transition: 'max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), gap 0.4s ease'
       }}>
         {filteredDownloads.length > 0 ? (
           filteredDownloads.map((file, index) => (
@@ -113,7 +114,8 @@ function Software() {
                   boxShadow: expandedId === file.id ? 'var(--shadow-glow)' : '',
                   padding: columns > 6 ? '1rem' : columns > 4 ? '1.5rem' : '2rem',
                   minWidth: 0,
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
                 }}
               >
                 <img 
@@ -127,7 +129,8 @@ function Software() {
                     borderRadius: '16px', 
                     objectFit: 'contain', 
                     marginBottom: columns > 6 ? '8px' : '16px',
-                    margin: '0 auto'
+                    margin: '0 auto',
+                    transition: 'all 0.4s ease'
                   }} 
                   onError={(e) => { e.target.src = 'https://www.google.com/s2/favicons?domain=example.com&sz=128'; }}
                 />
@@ -135,10 +138,11 @@ function Software() {
                   fontSize: columns > 6 ? '1rem' : columns > 4 ? '1.2rem' : '1.5rem',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
+                  transition: 'font-size 0.4s ease, margin 0.4s ease'
                 }}>{file.name}</h2>
                 
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: columns > 6 ? '8px' : '12px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: columns > 6 ? '8px' : '12px', flexWrap: 'wrap', transition: 'margin 0.4s ease' }}>
                   <span style={{ fontSize: '0.7rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>{file.version}</span>
                   {columns <= 6 && (
                     <span style={{ fontSize: '0.7rem', fontWeight: '600', color: 'var(--text)', backgroundColor: 'var(--code-bg)', padding: '4px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>{file.size}</span>
@@ -163,7 +167,8 @@ function Software() {
                   <button className="download-btn" style={{ 
                     padding: columns > 6 ? '8px 12px' : '12px 24px',
                     fontSize: columns > 6 ? '0.85rem' : '1.05rem',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.4s ease'
                   }}>
                     {columns <= 6 && (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>

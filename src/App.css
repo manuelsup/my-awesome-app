@@ -162,7 +162,6 @@ html {
   width: 100%;
   max-width: 450px;
   padding: 14px 20px 14px 48px;
-  margin-bottom: 2rem;
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border);
@@ -172,6 +171,7 @@ html {
   box-shadow: var(--shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {
@@ -191,7 +191,6 @@ html {
   gap: 1.5rem;
   width: 100%;
   max-width: 1000px;
-  perspective: 1000px;
 }
 
 /* The Download Card */
